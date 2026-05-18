@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import { router } from './router'
 import { AppProviders } from './components/providers/AppProviders'
-import { AuthProvider } from './components/providers/AuthProvider'
+import { AuthProvider } from '@/features/auth/AuthProvider'
 
 describe('App', () => {
   it('renders with router and providers', async () => {

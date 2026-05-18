@@ -1,76 +1,39 @@
-import { useState } from 'react'
-import { useCreatePrescription, useMedications } from '@/hooks/useDatabase'
-import type { CreatePrescriptionInput } from '@/types/database'
+import { useAddPrescriptionForm } from './useAddPrescriptionForm'
+import styles from './AddPrescriptionForm.module.css'
+import primitives from '@/styles/primitives.module.css'
+import typography from '@/styles/typography.module.css'
 
 type AddPrescriptionFormProps = {
   onSuccess?: () => void
 }
 
 export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [formData, setFormData] = useState({
-    medication_id: '',
-    medication_name: '',
-    dosage: '',
-    unit: 'mg',
-    frequency: '',
-    frequency_per_day: 1,
-    start_date: new Date().toISOString().split('T')[0],
-    end_date: '',
-    notes: '',
-  })
-
-  const createMutation = useCreatePrescription()
-  const { data: medications = [] } = useMedications()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!formData.medication_id || !formData.dosage || !formData.frequency || !formData.start_date) {
-      return
-    }
-
-    const input: CreatePrescriptionInput = {
-      medication_id: formData.medication_id,
-      medication_name: formData.medication_name || medications.find(m => m.id === formData.medication_id)?.name || '',
-      dosage: formData.dosage,
-      unit: formData.unit,
-      frequency: formData.frequency,
-      frequency_per_day: formData.frequency_per_day,
-      start_date: formData.start_date as string,
-      end_date: formData.end_date || undefined,
-      notes: formData.notes || undefined,
-    }
-
-    await createMutation.mutateAsync(input)
-    setIsOpen(false)
-    setFormData({
-      medication_id: '',
-      medication_name: '',
-      dosage: '',
-      unit: 'mg',
-      frequency: '',
-      frequency_per_day: 1,
-      start_date: new Date().toISOString().split('T')[0],
-      end_date: '',
-      notes: '',
-    })
-    onSuccess?.()
-  }
+  const {
+    isOpen,
+    setIsOpen,
+    formData,
+    setFormData,
+    medications,
+    createMutation,
+    handleSubmit,
+  } = useAddPrescriptionForm(onSuccess)
 
   if (!isOpen) {
     return (
-      <button className="btn btn-primary" onClick={() => setIsOpen(true)}>
+      <button
+        className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] disabled:opacity-60 disabled:cursor-not-allowed"
+        onClick={() => setIsOpen(true)}
+      >
         Add prescription
       </button>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="add-prescription-form">
-      <h2>Add prescription</h2>
+    <form onSubmit={handleSubmit} className={styles.addPrescriptionForm}>
+      <h2 className={typography.h2}>Add prescription</h2>
 
-      <div className="form-group">
+      <div className={primitives.formGroup}>
         <label htmlFor="medication">Medication</label>
         <select
           id="medication"
@@ -94,8 +57,8 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
         </select>
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
+      <div className={styles.formRow}>
+        <div className={primitives.formGroup}>
           <label htmlFor="dosage">Dosage</label>
           <input
             id="dosage"
@@ -106,7 +69,7 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
             required
           />
         </div>
-        <div className="form-group">
+        <div className={primitives.formGroup}>
           <label htmlFor="unit">Unit</label>
           <select
             id="unit"
@@ -124,8 +87,8 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
         </div>
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
+      <div className={styles.formRow}>
+        <div className={primitives.formGroup}>
           <label htmlFor="frequency">Frequency</label>
           <input
             id="frequency"
@@ -136,7 +99,7 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
             required
           />
         </div>
-        <div className="form-group">
+        <div className={primitives.formGroup}>
           <label htmlFor="frequency_per_day">Times per day</label>
           <input
             id="frequency_per_day"
@@ -149,8 +112,8 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
         </div>
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
+      <div className={styles.formRow}>
+        <div className={primitives.formGroup}>
           <label htmlFor="start_date">Start date</label>
           <input
             id="start_date"
@@ -160,7 +123,7 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
             required
           />
         </div>
-        <div className="form-group">
+        <div className={primitives.formGroup}>
           <label htmlFor="end_date">End date (optional)</label>
           <input
             id="end_date"
@@ -171,7 +134,7 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
         </div>
       </div>
 
-      <div className="form-group">
+      <div className={primitives.formGroup}>
         <label htmlFor="notes">Notes</label>
         <textarea
           id="notes"
@@ -182,13 +145,17 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
         />
       </div>
 
-      <div className="form-actions">
-        <button type="submit" className="btn btn-primary" disabled={createMutation.isPending}>
+      <div className={styles.formActions}>
+        <button
+          type="submit"
+          className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] disabled:opacity-60 disabled:cursor-not-allowed"
+          disabled={createMutation.isPending}
+        >
           {createMutation.isPending ? 'Adding...' : 'Add prescription'}
         </button>
         <button
           type="button"
-          className="btn btn-secondary"
+          className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--surface-2)] text-[var(--ink-1)] hover:bg-[#ddd5cc] disabled:opacity-60 disabled:cursor-not-allowed"
           onClick={() => setIsOpen(false)}
           disabled={createMutation.isPending}
         >
@@ -197,7 +164,7 @@ export function AddPrescriptionForm({ onSuccess }: AddPrescriptionFormProps) {
       </div>
 
       {createMutation.isError && (
-        <div className="alert alert-error">
+        <div className={`${primitives.alert} ${primitives.alertError}`}>
           {createMutation.error instanceof Error ? createMutation.error.message : 'Failed to add prescription'}
         </div>
       )}

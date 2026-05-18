@@ -1,0 +1,54 @@
+.appLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.appHeader {
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--surface-2);
+  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.headerContent {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  margin: 0;
+  font-size: 1.5rem;
+  font-family: 'Fraunces', serif;
+  color: var(--accent-strong);
+}
+
+.headerNav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.authStatus {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+.appMain {
+  flex: 1;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+}
+
+.pageCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}

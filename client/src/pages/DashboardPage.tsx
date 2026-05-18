@@ -3,8 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { supabase } from '@/utils/supabase'
 import { usePrescriptions } from '@/hooks/useDatabase'
-import { AddPrescriptionForm } from '@/components/AddPrescriptionForm'
-import { PrescriptionCard } from '@/components/PrescriptionCard'
+import { AddPrescriptionForm } from '@/features/prescriptions/AddPrescriptionForm'
+import { PrescriptionCard } from '@/features/prescriptions/PrescriptionCard'
+import styles from './DashboardPage.module.css'
+import layout from '@/components/Layout.module.css'
+import primitives from '@/styles/primitives.module.css'
+import typography from '@/styles/typography.module.css'
 
 export default function DashboardPage() {
   const { isAuthenticated, isLoading, user } = useAuth()
@@ -23,7 +27,7 @@ export default function DashboardPage() {
   }
 
   if (isLoading) {
-    return <div className="page-center">Loading...</div>
+    return <div className={layout.pageCenter}>Loading...</div>
   }
 
   if (!isAuthenticated || !user) {
@@ -31,30 +35,33 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="dashboard-container">
-      <section className="dashboard-header">
-        <h1>Welcome, {user.email}</h1>
-        <button className="btn btn-secondary" onClick={handleSignOut}>
+    <div className={styles.dashboardContainer}>
+      <section className={styles.dashboardHeader}>
+        <h1 className={typography.h1}>Welcome, {user.email}</h1>
+        <button
+          className="inline-flex items-center px-4 py-2 rounded-md font-medium text-sm transition-colors bg-[var(--surface-2)] text-[var(--ink-1)] hover:bg-[#ddd5cc]"
+          onClick={handleSignOut}
+        >
           Sign out
         </button>
       </section>
 
-      <section className="dashboard-prescriptions">
-        <div className="prescriptions-top">
-          <h2>Your prescriptions</h2>
+      <section className={styles.dashboardPrescriptions}>
+        <div className={styles.prescriptionsTop}>
+          <h2 className={typography.h2}>Your prescriptions</h2>
           <AddPrescriptionForm />
         </div>
 
         {isPrescriptionsLoading ? (
           <p>Loading prescriptions...</p>
         ) : error ? (
-          <div className="alert alert-error">
+          <div className={`${primitives.alert} ${primitives.alertError}`}>
             Failed to load prescriptions: {error instanceof Error ? error.message : 'Unknown error'}
           </div>
         ) : prescriptions.length === 0 ? (
-          <p className="placeholder">No prescriptions added yet. Start by adding your first prescription.</p>
+          <p className={styles.placeholder}>No prescriptions added yet. Start by adding your first prescription.</p>
         ) : (
-          <div className="prescriptions-grid">
+          <div className={styles.prescriptionsGrid}>
             {prescriptions.map((prescription) => (
               <PrescriptionCard key={prescription.id} prescription={prescription} />
             ))}
@@ -62,10 +69,10 @@ export default function DashboardPage() {
         )}
       </section>
 
-      <section className="dashboard-content">
-        <article className="dashboard-card">
-          <h2>Adherence summary</h2>
-          <p className="placeholder">Track your medication adherence here once you add prescriptions.</p>
+      <section className={styles.dashboardContent}>
+        <article className={styles.dashboardCard}>
+          <h2 className={typography.h2}>Adherence summary</h2>
+          <p className={styles.placeholder}>Track your medication adherence here once you add prescriptions.</p>
         </article>
       </section>
     </div>

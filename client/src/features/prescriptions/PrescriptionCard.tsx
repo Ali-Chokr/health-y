@@ -1,6 +1,9 @@
 import type { Prescription } from '@/types/database'
 import { useDoseLogsForPrescription, useCreateDoseLog } from '@/hooks/useDatabase'
 import { useState } from 'react'
+import styles from './PrescriptionCard.module.css'
+import typography from '@/styles/typography.module.css'
+import primitives from '@/styles/primitives.module.css'
 
 type PrescriptionCardProps = {
   prescription: Prescription
@@ -22,31 +25,37 @@ export function PrescriptionCard({ prescription }: PrescriptionCardProps) {
 
   // Get today's dose log if any
   const today = new Date().toISOString().split('T')[0]
-  const todayDoseLog = doseLogs.find(
-    (log) => log.logged_at.split('T')[0] === today,
-  )
+  const todayDoseLog = doseLogs.find((log) => log.logged_at.split('T')[0] === today)
 
   return (
-    <article className="prescription-card">
-      <div className="prescription-header">
+    <article className={styles.prescriptionCard}>
+      <div className={styles.prescriptionHeader}>
         <div>
-          <h3>{prescription.medication_name}</h3>
-          <p className="prescription-dosage">
+          <h3 className={typography.h3}>{prescription.medication_name}</h3>
+          <p className={styles.prescriptionDosage}>
             {prescription.dosage} {prescription.unit}
           </p>
         </div>
-        <div className="prescription-status">
+        <div className={styles.prescriptionStatus}>
           {todayDoseLog ? (
-            <span className={`status-badge status-${todayDoseLog.status}`}>
+            <span
+              className={`${styles.statusBadge} ${
+                todayDoseLog.status === 'taken'
+                  ? styles.statusTaken
+                  : todayDoseLog.status === 'missed'
+                    ? styles.statusMissed
+                    : styles.statusPending
+              }`}
+            >
               {todayDoseLog.status === 'taken' ? '✓ Taken today' : 'Missed'}
             </span>
           ) : (
-            <span className="status-badge status-pending">Not logged today</span>
+            <span className={`${styles.statusBadge} ${styles.statusPending}`}>Not logged today</span>
           )}
         </div>
       </div>
 
-      <div className="prescription-details">
+      <div className={styles.prescriptionDetails}>
         <p>
           <strong>Frequency:</strong> {prescription.frequency}
         </p>
@@ -62,7 +71,7 @@ export function PrescriptionCard({ prescription }: PrescriptionCardProps) {
 
       {!todayDoseLog && (
         <button
-          className="btn btn-primary btn-small"
+          className={`${styles.btnSmall} inline-flex items-center px-4 py-2 rounded-md font-medium text-sm transition-colors bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] disabled:opacity-60 disabled:cursor-not-allowed`}
           onClick={handleLogDose}
           disabled={createDoseLogMutation.isPending}
         >
@@ -71,29 +80,22 @@ export function PrescriptionCard({ prescription }: PrescriptionCardProps) {
       )}
 
       {prescription.notes && (
-        <div className="prescription-notes">
-          <button
-            className="btn-text"
-            onClick={() => setShowNotes(!showNotes)}
-          >
+        <div className={styles.prescriptionNotes}>
+          <button className={styles.btnText} onClick={() => setShowNotes(!showNotes)}>
             {showNotes ? 'Hide' : 'Show'} notes
           </button>
-          {showNotes && (
-            <p className="notes-text">{prescription.notes}</p>
-          )}
+          {showNotes && <p className={styles.notesText}>{prescription.notes}</p>}
         </div>
       )}
 
       {doseLogs.length > 0 && doseLogs[0] && (
-        <div className="dose-history">
-          <p className="text-small">
-            Last logged: {new Date(doseLogs[0].logged_at).toLocaleDateString()}
-          </p>
+        <div className={styles.doseHistory}>
+          <p className={styles.textSmall}>Last logged: {new Date(doseLogs[0].logged_at).toLocaleDateString()}</p>
         </div>
       )}
 
       {createDoseLogMutation.isError && (
-        <div className="alert alert-error alert-small">
+        <div className={`${primitives.alert} ${primitives.alertError} ${styles.alertSmall}`}>
           {createDoseLogMutation.error instanceof Error
             ? createDoseLogMutation.error.message
             : 'Failed to log dose'}

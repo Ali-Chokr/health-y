@@ -1,0 +1,61 @@
+.dashboardContainer {
+  max-width: 960px;
+}
+
+.dashboardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--surface-2);
+}
+
+.dashboardHeader h1 {
+  margin: 0;
+}
+
+.dashboardContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboardCard {
+  background: var(--surface-1);
+  border: 1px solid var(--surface-2);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.dashboardCard h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.placeholder {
+  margin: 0 0 1rem;
+  color: var(--ink-2);
+}
+
+.dashboardPrescriptions {
+  margin-bottom: 2rem;
+}
+
+.prescriptionsTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.prescriptionsTop h2 {
+  margin: 0;
+}
+
+.prescriptionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}

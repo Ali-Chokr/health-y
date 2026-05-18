@@ -2,6 +2,10 @@ import { useState } from 'react'
 import { supabase } from '@/utils/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
+import styles from './AuthPage.module.css'
+import primitives from '@/styles/primitives.module.css'
+import layout from '@/components/Layout.module.css'
+import typography from '@/styles/typography.module.css'
 
 export default function AuthPage() {
   const { isAuthenticated } = useAuth()
@@ -40,12 +44,12 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="page-center">
-      <section className="auth-panel">
-        <h1>{mode === 'signin' ? 'Sign in' : 'Create account'}</h1>
-        {error && <div className="alert alert-error">{error}</div>}
-        <form onSubmit={handleAuth} className="auth-form">
-          <div className="form-group">
+    <div className={layout.pageCenter}>
+      <section className={styles.authPanel}>
+        <h1 className={typography.h1}>{mode === 'signin' ? 'Sign in' : 'Create account'}</h1>
+        {error && <div className={`${primitives.alert} ${primitives.alertError}`}>{error}</div>}
+        <form onSubmit={handleAuth} className={styles.authForm}>
+          <div className={primitives.formGroup}>
             <label htmlFor="email">Email</label>
             <input
               id="email"
@@ -56,7 +60,7 @@ export default function AuthPage() {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={primitives.formGroup}>
             <label htmlFor="password">Password</label>
             <input
               id="password"
@@ -67,13 +71,17 @@ export default function AuthPage() {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary" disabled={isLoading}>
+          <button
+            type="submit"
+            className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={isLoading}
+          >
             {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign in' : 'Sign up'}
           </button>
         </form>
         <button
           type="button"
-          className="btn btn-secondary"
+          className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--surface-2)] text-[var(--ink-1)] hover:bg-[#ddd5cc] disabled:opacity-60 disabled:cursor-not-allowed"
           onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
           disabled={isLoading}
         >

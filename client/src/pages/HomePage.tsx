@@ -1,6 +1,8 @@
 import { useAuth } from '@/hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import styles from './HomePage.module.css'
+import typography from '@/styles/typography.module.css'
 
 export default function HomePage() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -13,18 +15,21 @@ export default function HomePage() {
   }, [isLoading, isAuthenticated, navigate])
 
   if (isLoading) {
-    return <div className="page-center">Loading...</div>
+    return <div className={styles.pageCenter}>Loading...</div>
   }
 
   return (
-    <div className="page-center">
-      <section className="hero-panel">
-        <p className="eyebrow">Health-y platform</p>
-        <h1>Welcome to your medication companion</h1>
-        <p className="lead">
+    <div className={styles.pageCenter}>
+      <section className={styles.heroPanel}>
+        <p className={styles.eyebrow}>Health-y platform</p>
+        <h1 className={typography.h1}>Welcome to your medication companion</h1>
+        <p className={styles.lead}>
           Track your prescriptions, stay on schedule, and take control of your health.
         </p>
-        <a href="/auth" className="btn btn-primary">
+        <a
+          href="/auth"
+          className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)]"
+        >
           Get started
         </a>
       </section>
