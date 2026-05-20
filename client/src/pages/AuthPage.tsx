@@ -6,6 +6,7 @@ import styles from './AuthPage.module.css'
 import primitives from '@/styles/primitives.module.css'
 import layout from '@/components/Layout.module.css'
 import typography from '@/styles/typography.module.css'
+import { Button, FormRow } from '@/components/primitives'
 
 export default function AuthPage() {
   const { isAuthenticated } = useAuth()
@@ -49,8 +50,7 @@ export default function AuthPage() {
         <h1 className={typography.h1}>{mode === 'signin' ? 'Sign in' : 'Create account'}</h1>
         {error && <div className={`${primitives.alert} ${primitives.alertError}`}>{error}</div>}
         <form onSubmit={handleAuth} className={styles.authForm}>
-          <div className={primitives.formGroup}>
-            <label htmlFor="email">Email</label>
+          <FormRow label="Email" htmlFor="email">
             <input
               id="email"
               type="email"
@@ -59,9 +59,9 @@ export default function AuthPage() {
               placeholder="you@example.com"
               required
             />
-          </div>
-          <div className={primitives.formGroup}>
-            <label htmlFor="password">Password</label>
+          </FormRow>
+
+          <FormRow label="Password" htmlFor="password">
             <input
               id="password"
               type="password"
@@ -70,23 +70,21 @@ export default function AuthPage() {
               placeholder="••••••••"
               required
             />
-          </div>
-          <button
-            type="submit"
-            className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)] disabled:opacity-60 disabled:cursor-not-allowed"
-            disabled={isLoading}
-          >
+          </FormRow>
+
+          <Button type="submit" variant="primary" disabled={isLoading}>
             {isLoading ? 'Loading...' : mode === 'signin' ? 'Sign in' : 'Sign up'}
-          </button>
+          </Button>
         </form>
-        <button
+
+        <Button
           type="button"
-          className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-base transition-colors bg-[var(--surface-2)] text-[var(--ink-1)] hover:bg-[#ddd5cc] disabled:opacity-60 disabled:cursor-not-allowed"
+          variant="secondary"
           onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
           disabled={isLoading}
         >
           {mode === 'signin' ? 'Need an account?' : 'Have an account?'}
-        </button>
+        </Button>
       </section>
     </div>
   )

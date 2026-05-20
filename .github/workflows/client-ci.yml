@@ -33,6 +33,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check globals
+        run: node ./scripts/check-globals.cjs
+
       - name: Lint
         run: npm run lint
 
