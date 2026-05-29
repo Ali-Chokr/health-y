@@ -117,13 +117,18 @@ create policy "Users can update their own dose logs"
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, email)
-  values (new.id, new.email);
+  insert into public.profiles (id, email, updated_at)
+  values (new.id, new.email, timezone('utc'::text, now()))
+  on conflict (id) do update
+    set email = excluded.email,
+        updated_at = timezone('utc'::text, now());
   return new;
 end;
 $$ language plpgsql security definer;
 
 -- Trigger to create profile on sign up
+drop trigger if exists on_auth_user_created on auth.users;
+
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
